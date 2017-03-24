@@ -154,7 +154,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         // If found, then register as listener
         if ((list != null) && (list.size() > 0)) {
           this.mSensor = list.get(0);
-          if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_UI)) {
+          if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_GAME)) {
               this.setStatus(AccelListener.STARTING);
               // CB-11531: Mark accuracy as 'reliable' - this is complementary to
               // setting it to 'unreliable' 'stop' method
