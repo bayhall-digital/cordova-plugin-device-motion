@@ -57,7 +57,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
 
     private SensorManager sensorManager;                // Sensor manager
     private Sensor mSensor;                             // Acceleration sensor returned by sensor manager
-    private sensorMagneticField;                        // Magnetic Field sensor returned by sensor manager
+    private Sensor sensorMagneticField;                 // Magnetic Field sensor returned by sensor manager
        
     private float[] matrixR;
     private float[] matrixI;
