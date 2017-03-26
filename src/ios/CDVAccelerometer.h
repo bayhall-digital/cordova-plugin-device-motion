@@ -25,6 +25,9 @@
     double x;
     double y;
     double z;
+    double roll;
+    double pitch;
+    double yaw;
     NSTimeInterval timestamp;
 }
 
