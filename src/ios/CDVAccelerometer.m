@@ -92,9 +92,9 @@
                weakSelf.pitch = self.motionManager.deviceMotion.attitude.pitch;
                weakSelf.yaw = self.motionManager.deviceMotion.attitude.yaw;            
             } else {
-               weakSelf.roll = 0.0;
-               weakSelf.pitch = 0.0;
-               weakSelf.yaw = 0.0;
+               weakSelf.roll = -1;
+               weakSelf.pitch = -1;
+               weakSelf.yaw = -1;
             }
      
             [weakSelf returnAccelInfo];
