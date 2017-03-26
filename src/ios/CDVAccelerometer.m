@@ -90,7 +90,7 @@
                //self.referenceAttitude = self.motionManager.deviceMotion.attitude;
                weakSelf.roll = self.motionManager.deviceMotion.attitude.roll;
                weakSelf.pitch = self.motionManager.deviceMotion.attitude.pitch;
-               weakSelf.yaw = self.motionManager.deviceMotion.attitude.yaw;            
+               weakSelf.yaw = -1;            
             } else {
                weakSelf.roll = -1;
                weakSelf.pitch = -1;
