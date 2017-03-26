@@ -49,15 +49,21 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
     public static int RUNNING = 2;
     public static int ERROR_FAILED_TO_START = 3;
 
-    private float x,y,z;                                // most recent acceleration values
-    private long timestamp;                         // time of most recent value
-    private int status;                                 // status of listener
+    private float x,y,z,roll,pitch,yaw;                  // most recent acceleration values
+    private long timestamp;                              // time of most recent value
+    private int status;                                  // status of listener
     private int accuracy = SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM;
 
-    private SensorManager sensorManager;    // Sensor manager
-    private Sensor mSensor;                           // Acceleration sensor returned by sensor manager
+    private SensorManager sensorManager;                // Sensor manager
+    private Sensor mSensor;                             // Acceleration sensor returned by sensor manager
 
-    private CallbackContext callbackContext;              // Keeps track of the JS callback context.
+    private float[] matrixR;
+    private float[] matrixI;
+    private float[] matrixValues;
+    private float[] valuesAccelerometer;
+    private float[] valuesMagneticField;       
+       
+    private CallbackContext callbackContext;            // Keeps track of the JS callback context.
 
     private Handler mainHandler=null;
     private Runnable mainRunnable =new Runnable() {
@@ -73,6 +79,9 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         this.x = 0;
         this.y = 0;
         this.z = 0;
+        this.roll = 0;
+        this.pitch = 0;
+        this.yaw = 0;
         this.timestamp = 0;
         this.setStatus(AccelListener.STOPPED);
      }
@@ -239,26 +248,58 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
      */
     public void onSensorChanged(SensorEvent event) {
         // Only look at accelerometer events
-        if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER) {
-            return;
+        //if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER || event.sensor.getType() != Sensor.TYPE_MAGNETIC_FIELD) {
+        //    return;
+        //}
+           
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {   
+           
+               // If not running, then just return
+               if (this.status == AccelListener.STOPPED) {
+                   return;
+               }
+               this.setStatus(AccelListener.RUNNING);
+
+               if (this.accuracy >= SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM) {
+
+                   // Save time that event was received
+                   this.timestamp = System.currentTimeMillis();
+                   this.x = event.values[0];
+                   this.y = event.values[1];
+                   this.z = event.values[2];
+
+                   this.win();
+               }
+               
         }
-
-        // If not running, then just return
-        if (this.status == AccelListener.STOPPED) {
-            return;
+           
+           
+           
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            this.valuesAccelerometer = lowPass(event.values.clone(), this.valuesAccelerometer);
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            this.valuesMagneticField = lowPass(event.values.clone(), this.valuesMagneticField);
         }
-        this.setStatus(AccelListener.RUNNING);
+        if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
+            SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 
-        if (this.accuracy >= SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM) {
+            if (true) {
+                   
+                SensorManager.getOrientation(matrixR, matrixValues);
 
-            // Save time that event was received
-            this.timestamp = System.currentTimeMillis();
-            this.x = event.values[0];
-            this.y = event.values[1];
-            this.z = event.values[2];
+                double this.yaw = Math.toDegrees(matrixValues[0]); //not yaw, Azimuth
+                double this.pitch = Math.toDegrees(matrixValues[1]);
+                double this.roll = Math.toDegrees(matrixValues[2]);  
 
-            this.win();
-        }
+                this.valuesAccelerometer = new float[3];
+                this.valuesMagneticField = new float[3];                   
+                   
+            }
+
+        }           
+           
+           
+           
     }
 
     /**
