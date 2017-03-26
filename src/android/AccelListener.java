@@ -291,7 +291,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
             this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
         }
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
-        //    SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
+              SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 //
         //    if (true) {
         //           
@@ -301,8 +301,8 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         //        this.pitch = Math.toDegrees(this.matrixValues[1]);
         //        this.roll = Math.toDegrees(this.matrixValues[2]);  
 //
-        //        this.valuesAccelerometer = new float[3];
-        //        this.valuesMagneticField = new float[3];                   
+                this.valuesAccelerometer = new float[3];
+                this.valuesMagneticField = new float[3];                   
         //           
         //    }
 
