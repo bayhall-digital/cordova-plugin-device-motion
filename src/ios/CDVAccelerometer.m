@@ -24,6 +24,7 @@
 @property (readwrite, assign) BOOL isRunning;
 @property (readwrite, assign) BOOL haveReturnedResult;
 @property (readwrite, strong) CMMotionManager* motionManager;
+@property (readwrite, strong) CMAttitude* currentAttitude;
 @property (readwrite, assign) double x;
 @property (readwrite, assign) double y;
 @property (readwrite, assign) double z;
@@ -81,16 +82,17 @@
         [self.motionManager setAccelerometerUpdateInterval:kAccelerometerInterval/1000];  // expected in seconds
         __weak CDVAccelerometer* weakSelf = self;
         [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+            
             weakSelf.x = accelerometerData.acceleration.x;
             weakSelf.y = accelerometerData.acceleration.y;
             weakSelf.z = accelerometerData.acceleration.z;
             weakSelf.timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
             
             if ([self.motionManager isDeviceMotionAvailable] == YES) {
-               //self.referenceAttitude = self.motionManager.deviceMotion.attitude;
-               weakSelf.roll = self.motionManager.deviceMotion.attitude.roll;
-               weakSelf.pitch = self.motionManager.deviceMotion.attitude.pitch;
-               weakSelf.yaw = -1;            
+               self.currentAttitude = self.motionManager.deviceMotion.attitude;
+               weakSelf.roll = self.currentAttitude.roll;
+               weakSelf.pitch = self.currentAttitude.pitch;
+               weakSelf.yaw = self.currentAttitude.yaw;            
             } else {
                weakSelf.roll = -1;
                weakSelf.pitch = -1;
