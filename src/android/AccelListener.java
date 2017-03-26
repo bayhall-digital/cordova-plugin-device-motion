@@ -284,28 +284,28 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
            
            
            
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
-        }
-        if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
-            SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
-
-            if (true) {
-                   
-                SensorManager.getOrientation(this.matrixR, this.matrixValues);
-
-                this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
-                this.pitch = Math.toDegrees(this.matrixValues[1]);
-                this.roll = Math.toDegrees(this.matrixValues[2]);  
-
-                this.valuesAccelerometer = new float[3];
-                this.valuesMagneticField = new float[3];                   
-                   
-            }
-
-        }           
+        //if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        //    this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
+        //} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        //    this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
+        //}
+        //if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
+        //    SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
+//
+        //    if (true) {
+        //           
+        //        SensorManager.getOrientation(this.matrixR, this.matrixValues);
+//
+        //        this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+        //        this.pitch = Math.toDegrees(this.matrixValues[1]);
+        //        this.roll = Math.toDegrees(this.matrixValues[2]);  
+//
+        //        this.valuesAccelerometer = new float[3];
+        //        this.valuesMagneticField = new float[3];                   
+        //           
+        //    }
+//
+        //}           
            
            
            
