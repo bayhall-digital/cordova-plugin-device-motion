@@ -57,7 +57,8 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
 
     private SensorManager sensorManager;                // Sensor manager
     private Sensor mSensor;                             // Acceleration sensor returned by sensor manager
-
+    private sensorMagneticField;                        // Magnetic Field sensor returned by sensor manager
+       
     private float[] matrixR;
     private float[] matrixI;
     private float[] matrixValues;
@@ -163,7 +164,9 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
 
         // If found, then register as listener
         if ((list != null) && (list.size() > 0)) {
+               
           this.mSensor = list.get(0);
+               
           if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_GAME)) {
               this.setStatus(AccelListener.STARTING);
               // CB-11531: Mark accuracy as 'reliable' - this is complementary to
@@ -175,10 +178,15 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
               return this.status;
           };
 
+          this.sensorMagneticField = this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+          this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME);
+               
         } else {
+               
           this.setStatus(AccelListener.ERROR_FAILED_TO_START);
           this.fail(AccelListener.ERROR_FAILED_TO_START, "No sensors found to register accelerometer listening to.");
           return this.status;
+               
         }
 
         startTimeout();
