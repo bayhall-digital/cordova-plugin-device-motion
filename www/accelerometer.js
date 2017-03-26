@@ -47,7 +47,7 @@ var eventTimerId = null;
 function start() {
     exec(function (a) {
         var tempListeners = listeners.slice(0);
-        accel = new Acceleration(a.x, a.y, a.z, a.timestamp);
+        accel = new Acceleration(a.x, a.y, a.z, a.roll, a.pitch, a.yaw, a.timestamp);
         for (var i = 0, l = tempListeners.length; i < l; i++) {
             tempListeners[i].win(accel);
         }
@@ -96,7 +96,7 @@ var accelerometer = {
 
         if (cordova.platformId === "windowsphone") {
             exec(function (a) {
-                accel = new Acceleration(a.x, a.y, a.z, a.timestamp);
+                accel = new Acceleration(a.x, a.y, a.z, a.roll, a.pitch, a.yaw, a.timestamp);
                 successCallback(accel);
             }, function (e) {
                 errorCallback(e);
