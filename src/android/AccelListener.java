@@ -276,20 +276,20 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
            
            
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            this.valuesAccelerometer = lowPass(event.values.clone(), this.valuesAccelerometer);
+            this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
         } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            this.valuesMagneticField = lowPass(event.values.clone(), this.valuesMagneticField);
+            this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
         }
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
             SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 
             if (true) {
                    
-                SensorManager.getOrientation(matrixR, matrixValues);
+                SensorManager.getOrientation(this.matrixR, this.matrixValues);
 
-                double this.yaw = Math.toDegrees(matrixValues[0]); //not yaw, Azimuth
-                double this.pitch = Math.toDegrees(matrixValues[1]);
-                double this.roll = Math.toDegrees(matrixValues[2]);  
+                double this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+                double this.pitch = Math.toDegrees(this.matrixValues[1]);
+                double this.roll = Math.toDegrees(this.matrixValues[2]);  
 
                 this.valuesAccelerometer = new float[3];
                 this.valuesMagneticField = new float[3];                   
@@ -302,6 +302,20 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
            
     }
 
+    /**
+    * Low pass filter used to smooth the sensor readings
+    */       
+    //http://stackoverflow.com/questions/22619909/how-to-capture-orientation-values-after-a-certain-time-an-activity-has-started
+    private float[] lowPass( float[] input, float[] output ) {
+        float ALPHA = 0.25f;
+        if ( output == null ) return input;     
+        for ( int i=0; i<input.length; i++ ) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
+    }       
+       
+       
     /**
      * Called when the view navigates.
      */
@@ -332,7 +346,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         PluginResult result = new PluginResult(PluginResult.Status.OK, this.getAccelerationJSON());
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
-    }
+   }
 
     private void setStatus(int status) {
         this.status = status;
