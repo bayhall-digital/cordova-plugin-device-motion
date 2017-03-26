@@ -27,12 +27,15 @@
 @property (readwrite, assign) double x;
 @property (readwrite, assign) double y;
 @property (readwrite, assign) double z;
+@property (readwrite, assign) double roll;
+@property (readwrite, assign) double pitch;
+@property (readwrite, assign) double yaw;
 @property (readwrite, assign) NSTimeInterval timestamp;
 @end
 
 @implementation CDVAccelerometer
 
-@synthesize callbackId, isRunning,x,y,z,timestamp;
+@synthesize callbackId, isRunning,x,y,z,roll,pitch,yaw,timestamp;
 
 // defaults to 10 msec
 #define kAccelerometerInterval 10
@@ -46,6 +49,9 @@
         self.x = 0;
         self.y = 0;
         self.z = 0;
+        self.roll = 0;
+        self.pitch = 0;
+        self.yaw = 0;     
         self.timestamp = 0;
         self.callbackId = nil;
         self.isRunning = NO;
@@ -79,6 +85,18 @@
             weakSelf.y = accelerometerData.acceleration.y;
             weakSelf.z = accelerometerData.acceleration.z;
             weakSelf.timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
+            
+            if motion.isDeviceMotionAvailable {
+               //self.referenceAttitude = self.motionManager.deviceMotion.attitude;
+               weakSelf.roll = self.motionManager.deviceMotion.attitude.roll;
+               weakSelf.pitch = self.motionManager.deviceMotion.attitude.pitch;
+               weakSelf.yaw = self.motionManager.deviceMotion.attitude.yaw;            
+            } else {
+               weakSelf.roll = 0.0;
+               weakSelf.pitch = 0.0;
+               weakSelf.yaw = 0.0;
+            }
+     
             [weakSelf returnAccelInfo];
         }];
 
@@ -121,6 +139,9 @@
     [accelProps setValue:[NSNumber numberWithDouble:self.x * kGravitationalConstant] forKey:@"x"];
     [accelProps setValue:[NSNumber numberWithDouble:self.y * kGravitationalConstant] forKey:@"y"];
     [accelProps setValue:[NSNumber numberWithDouble:self.z * kGravitationalConstant] forKey:@"z"];
+    [accelProps setValue:[NSNumber numberWithDouble:self.roll] forKey:@"roll"];
+    [accelProps setValue:[NSNumber numberWithDouble:self.pitch] forKey:@"pitch"];
+    [accelProps setValue:[NSNumber numberWithDouble:self.yaw] forKey:@"yaw"]; 
     [accelProps setValue:[NSNumber numberWithDouble:self.timestamp] forKey:@"timestamp"];
 
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:accelProps];
