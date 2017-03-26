@@ -295,18 +295,19 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
                
                boolean success = SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
-//
+
             if (success) {
-        //           
+                   
+               //https://developer.android.com/reference/android/hardware/SensorManager.html#getOrientation(float[],%20float[])    
                SensorManager.getOrientation(this.matrixR, this.matrixValues);
-//
-               this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
-               this.pitch = Math.toDegrees(this.matrixValues[1]);
-               this.roll = Math.toDegrees(this.matrixValues[2]);  
-//
+
+               this.yaw = this.matrixValues[0] //Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+               this.pitch = this.matrixValues[1] //Math.toDegrees(this.matrixValues[1]);
+               this.roll = this.matrixValues[2] //Math.toDegrees(this.matrixValues[2]);  
+
                this.valuesAccelerometer = null;
                this.valuesMagneticField = null;                   
-        //           
+                   
             }
 
                 //this.yaw = -1;
