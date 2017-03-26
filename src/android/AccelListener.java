@@ -358,6 +358,9 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
             r.put("x", this.x);
             r.put("y", this.y);
             r.put("z", this.z);
+            r.put("roll", this.roll);
+            r.put("pitch", this.pitch);
+            r.put("yaw", this.yaw);
             r.put("timestamp", this.timestamp);
         } catch (JSONException e) {
             e.printStackTrace();
