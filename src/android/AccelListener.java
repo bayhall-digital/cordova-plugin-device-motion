@@ -60,8 +60,8 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
        
     //roll, pitch, azimuth   
     private double roll,pitch,yaw;                       // most recent orientation values
-    private float[] matrixR;
-    private float[] matrixI;
+    private float[] matrixR = new float[9];
+    private float[] matrixI = new float[9];
     private float[] matrixValues;
     private float[] valuesAccelerometer;
     private float[] valuesMagneticField;       
@@ -293,15 +293,16 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
                this.valuesMagneticField = event.values;
         }
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
+               
                boolean success = SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 //
             if (success) {
         //           
-                //SensorManager.getOrientation(this.matrixR, this.matrixValues);
+               //SensorManager.getOrientation(this.matrixR, this.matrixValues);
 //
-                //this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
-                //this.pitch = Math.toDegrees(this.matrixValues[1]);
-               // this.roll = Math.toDegrees(this.matrixValues[2]);  
+               //this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+               //this.pitch = Math.toDegrees(this.matrixValues[1]);
+               //this.roll = Math.toDegrees(this.matrixValues[2]);  
 //
                this.valuesAccelerometer = null;
                this.valuesMagneticField = null;                   
