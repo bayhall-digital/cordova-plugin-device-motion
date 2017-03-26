@@ -107,7 +107,7 @@
      
         //DeviceMotion
         [self.motionManager setDeviceMotionUpdateInterval:kAccelerometerInterval/1000];  // expected in seconds
-        [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotionData *deviceMotionData, NSError *error) {
+        [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *deviceMotionData, NSError *error) {
 
               weakSelf.roll = deviceMotionData.attitude.roll;
               weakSelf.pitch = deviceMotionData.attitude.pitch;
