@@ -86,7 +86,7 @@
             weakSelf.z = accelerometerData.acceleration.z;
             weakSelf.timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
             
-            if motion.isDeviceMotionAvailable {
+            if ([self.motionManager isDeviceMotionAvailable] == YES) {
                //self.referenceAttitude = self.motionManager.deviceMotion.attitude;
                weakSelf.roll = self.motionManager.deviceMotion.attitude.roll;
                weakSelf.pitch = self.motionManager.deviceMotion.attitude.pitch;
