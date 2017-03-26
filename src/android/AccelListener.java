@@ -297,11 +297,11 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
 //
             if (success) {
         //           
-                SensorManager.getOrientation(this.matrixR, this.matrixValues);
+                //SensorManager.getOrientation(this.matrixR, this.matrixValues);
 //
-                this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
-                this.pitch = Math.toDegrees(this.matrixValues[1]);
-                this.roll = Math.toDegrees(this.matrixValues[2]);  
+                //this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+                //this.pitch = Math.toDegrees(this.matrixValues[1]);
+               // this.roll = Math.toDegrees(this.matrixValues[2]);  
 //
                this.valuesAccelerometer = null;
                this.valuesMagneticField = null;                   
