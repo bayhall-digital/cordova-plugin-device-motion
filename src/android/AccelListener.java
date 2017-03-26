@@ -286,25 +286,27 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
            
            
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
+           //this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
+               this.valuesAccelerometer = event.values;
         } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
+           //this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
+               this.valuesMagneticField = event.values;
         }
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
-              SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
+               boolean success = SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 //
-        //    if (true) {
+            if (success) {
         //           
                 SensorManager.getOrientation(this.matrixR, this.matrixValues);
 //
-               // this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
-               // this.pitch = Math.toDegrees(this.matrixValues[1]);
-               // this.roll = Math.toDegrees(this.matrixValues[2]);  
+                this.yaw = Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+                this.pitch = Math.toDegrees(this.matrixValues[1]);
+                this.roll = Math.toDegrees(this.matrixValues[2]);  
 //
-               // this.valuesAccelerometer = null;
-                //this.valuesMagneticField = null;                   
+               this.valuesAccelerometer = null;
+               this.valuesMagneticField = null;                   
         //           
-        //    }
+            }
 
                 //this.yaw = -1;
                 //this.pitch = -1;
