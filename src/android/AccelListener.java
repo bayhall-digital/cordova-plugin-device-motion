@@ -161,12 +161,15 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         this.setStatus(AccelListener.STARTING);
 
         // Get accelerometer from sensor manager
-        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        List<Sensor> sensorList = this.sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        sensorList.add(this.sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD));
 
         // If found, then register as listener
-        if ((list != null) && (list.size() > 0)) {
+        if ((sensorList != null) && (sensorList.size() > 1)) {
                
-          this.mSensor = list.get(0);
+               
+               
+          this.mSensor = sensorList.get(0); //this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                
           if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_GAME)) {
               this.setStatus(AccelListener.STARTING);
@@ -175,12 +178,27 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
               this.accuracy = SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM;
           } else {
               this.setStatus(AccelListener.ERROR_FAILED_TO_START);
-              this.fail(AccelListener.ERROR_FAILED_TO_START, "Device sensor returned an error.");
+              this.fail(AccelListener.ERROR_FAILED_TO_START, "Device accelerator sensor returned an error.");
               return this.status;
           };
 
-          this.sensorMagneticField = this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-          this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME);
+               
+               
+          this.sensorMagneticField = sensorList.get(1); //this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+          //this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME);
+               
+          if (this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME)) {
+              //this.setStatus(AccelListener.STARTING);
+              // CB-11531: Mark accuracy as 'reliable' - this is complementary to
+              // setting it to 'unreliable' 'stop' method
+              //this.accuracy = SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM;
+          } else {
+              this.setStatus(AccelListener.ERROR_FAILED_TO_START);
+              this.fail(AccelListener.ERROR_FAILED_TO_START, "Device magnetic field sensor returned an error.");
+              return this.status;
+          };           
+               
+               
                
         } else {
                
@@ -284,38 +302,35 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         }
            
          
-           
+        // ORIENTATION - ROLL, PITCH, YAW   
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
            //this.valuesAccelerometer = this.lowPass(event.values.clone(), this.valuesAccelerometer);
-               this.valuesAccelerometer = event.values;
+               this.valuesAccelerometer = event.values.clone();
         } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
            //this.valuesMagneticField = this.lowPass(event.values.clone(), this.valuesMagneticField);
-               this.valuesMagneticField = event.values;
+               this.valuesMagneticField = event.values.clone();
         }
         if (this.valuesAccelerometer != null && this.valuesMagneticField != null) {
                
-               boolean success = SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
+            boolean success = SensorManager.getRotationMatrix(this.matrixR, this.matrixI, this.valuesAccelerometer, this.valuesMagneticField);
 
             if (success) {
-                   
+
                //https://developer.android.com/reference/android/hardware/SensorManager.html#getOrientation(float[],%20float[])    
                SensorManager.getOrientation(this.matrixR, this.matrixValues);
 
-               this.yaw = this.matrixValues[0]; //Math.toDegrees(this.matrixValues[0]); //not yaw, Azimuth
+               this.yaw = this.matrixValues[0]; //Math.toDegrees(this.matrixValues[0]); //Azimuth
                this.pitch = this.matrixValues[1]; //Math.toDegrees(this.matrixValues[1]);
                this.roll = this.matrixValues[2]; //Math.toDegrees(this.matrixValues[2]);  
 
+               //reset values for next pass
                this.valuesAccelerometer = null;
                this.valuesMagneticField = null;                   
-                   
-            }
 
-                //this.yaw = -1;
-                //this.pitch = -1;
-                //this.roll = -1;        
-               
+            }
+ 
         }           
-           
+        // END: ORIENTATION - ROLL, PITCH, YAW      
            
            
     }
