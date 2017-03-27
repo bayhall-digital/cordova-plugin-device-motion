@@ -50,15 +50,8 @@ Report issues with this plugin on the [Apache Cordova issue tracker](https://iss
 
 ## Supported Platforms
 
-- Amazon Fire OS
 - Android
-- BlackBerry 10
-- Browser
-- Firefox OS
 - iOS
-- Tizen
-- Windows Phone 8
-- Windows
 
 ## Methods
 
