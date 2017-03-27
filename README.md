@@ -28,6 +28,8 @@ description: Access accelerometer data, and phone orientation.
 
 # cordova-plugin-device-motion-fast
 
+THIS IS A FORK OF apache/cordova-plugin-device-motion TO ADD EXTRA DATA CAPTURE TO THE ACCELEROMETER
+
 This plugin provides access to the device's accelerometer and orientation at atleast 50Hz. The accelerometer is
 a motion sensor that detects the change (_delta_) in movement relative to the
 current device orientation, in three dimensions along the _x_, _y_, and _z_
@@ -79,6 +81,9 @@ callback function.
         alert('Acceleration X: ' + acceleration.x + '\n' +
               'Acceleration Y: ' + acceleration.y + '\n' +
               'Acceleration Z: ' + acceleration.z + '\n' +
+              'Orientation Roll: ' + acceleration.roll + '\n' +
+              'Orientation Pitch: ' + acceleration.pitch + '\n' +
+              'Orientation Yaw: ' + acceleration.yaw + '\n' +
               'Timestamp: '      + acceleration.timestamp + '\n');
     }
 
