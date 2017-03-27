@@ -165,7 +165,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         List<Sensor> magneticFieldSensorList = this.sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
 
         // If found, then register as listener
-        if ( (accelerometerSensorList != null) && (accelerometerSensorList.size() > 0)  (magneticFieldSensorList != null) && (magneticFieldSensorList.size() > 0)) {
+        if ( (accelerometerSensorList != null) && (accelerometerSensorList.size() > 0) && (magneticFieldSensorList != null) && (magneticFieldSensorList.size() > 0)) {
                   
           this.mSensor = accelerometerSensorList.get(0); //this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                
