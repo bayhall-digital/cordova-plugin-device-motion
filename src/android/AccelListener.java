@@ -161,15 +161,13 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
         this.setStatus(AccelListener.STARTING);
 
         // Get accelerometer from sensor manager
-        List<Sensor> sensorList = this.sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-        sensorList.add(this.sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD));
+        List<Sensor> accelerometerSensorList = this.sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        List<Sensor> magneticFieldSensorList = this.sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
 
         // If found, then register as listener
-        if ((sensorList != null) && (sensorList.size() > 1)) {
-               
-               
-               
-          this.mSensor = sensorList.get(0); //this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if ( (accelerometerSensorList != null) && (accelerometerSensorList.size() > 0)  (magneticFieldSensorList != null) && (magneticFieldSensorList.size() > 0)) {
+                  
+          this.mSensor = accelerometerSensorList.get(0); //this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                
           if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_GAME)) {
               this.setStatus(AccelListener.STARTING);
@@ -182,9 +180,7 @@ public class AccelListener extends CordovaPlugin implements SensorEventListener 
               return this.status;
           };
 
-               
-               
-          this.sensorMagneticField = sensorList.get(1); //this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+          this.sensorMagneticField = magneticFieldSensorList.get(0); //this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
           //this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME);
                
           if (this.sensorManager.registerListener(this, this.sensorMagneticField, SensorManager.SENSOR_DELAY_GAME)) {
