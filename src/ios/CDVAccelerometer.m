@@ -77,33 +77,23 @@
         self.motionManager = [[CMMotionManager alloc] init];
     }
 
-    if ([self.motionManager isAccelerometerAvailable] == YES) {
+    if ([self.motionManager isAccelerometerAvailable] == YES && [self.motionManager isDeviceMotionAvailable] == YES) {
         // Assign the update interval to the motion manager and start updates
         [self.motionManager setAccelerometerUpdateInterval:kAccelerometerInterval/1000];  // expected in seconds
         __weak CDVAccelerometer* weakSelf = self;
         
+     
+       //Acceleration
        [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
             
             weakSelf.x = accelerometerData.acceleration.x;
             weakSelf.y = accelerometerData.acceleration.y;
             weakSelf.z = accelerometerData.acceleration.z;
             weakSelf.timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
-            
-            //if ([self.motionManager isDeviceMotionAvailable] == YES) {
-            //   self.currentAttitude = self.motionManager.deviceMotion.attitude;
-            //   weakSelf.roll = self.currentAttitude.roll;
-            //   weakSelf.pitch = self.currentAttitude.pitch;
-            //   weakSelf.yaw = self.currentAttitude.yaw;            
-            //} else {
-            //   weakSelf.roll = -1;
-            //   weakSelf.pitch = -1;
-            //   weakSelf.yaw = -1;
-            //}
      
             [weakSelf returnAccelInfo];
         }];
 
-     
      
         //DeviceMotion
         [self.motionManager setDeviceMotionUpdateInterval:kAccelerometerInterval/1000];  // expected in seconds
@@ -123,7 +113,7 @@
     else {
 
         NSLog(@"Running in Simulator? All gyro tests will fail.");
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Error. Accelerometer Not Available."];
+        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Error. Accelerometer or DeviceMotion Not Available."];
         
         [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
     }
@@ -143,6 +133,7 @@
             [self returnAccelInfo];
         }
         [self.motionManager stopAccelerometerUpdates];
+        [self.motionManager stopDeviceMotionUpdates];
     }
     self.isRunning = NO;
 }
