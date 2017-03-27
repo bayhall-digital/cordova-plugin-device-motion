@@ -1,6 +1,6 @@
 ---
-title: Device Motion
-description: Access accelerometer data.
+title: Device Motion 
+description: Access accelerometer data, and phone orientation.
 ---
 <!---
 # license: Licensed to the Apache Software Foundation (ASF) under one
@@ -23,14 +23,15 @@ description: Access accelerometer data.
 
 |Android 4.4|Android 5.1|iOS 9.3|iOS 10.0|
 |:-:|:-:|:-:|:-:|
-|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android-4.4,PLUGIN=cordova-plugin-device-motion-fast)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android-4.4,PLUGIN=cordova-plugin-device-motion-fast/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android-5.1,PLUGIN=cordova-plugin-device-motion)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android-5.1,PLUGIN=cordova-plugin-device-motion-fast/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=ios-9.3,PLUGIN=cordova-plugin-device-motion-fast)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=ios-9.3,PLUGIN=cordova-plugin-device-motion-fast/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=ios-10.0,PLUGIN=cordova-plugin-device-motion-fast)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=ios-10.0,PLUGIN=cordova-plugin-device-motion-fast/)|
+
+
 
 # cordova-plugin-device-motion-fast
 
-This plugin provides access to the device's accelerometer. The accelerometer is
+This plugin provides access to the device's accelerometer and orientation at atleast 50Hz. The accelerometer is
 a motion sensor that detects the change (_delta_) in movement relative to the
 current device orientation, in three dimensions along the _x_, _y_, and _z_
-axis.
+axis. The "hacked" plugin also returns roll, pitch, and yaw for iOS, and also roll, pitch, and azimuth for Android.
 
 Access is via a global `navigator.accelerometer` object.
 
@@ -71,7 +72,7 @@ Report issues with this plugin on the [Apache Cordova issue tracker](https://iss
 
 ## navigator.accelerometer.getCurrentAcceleration
 
-Get the current acceleration along the _x_, _y_, and _z_ axes.
+Get the current acceleration along the _x_, _y_, and _z_ axes. Also returns _roll, _pitch, and _yaw_ to compliment acceleration with phone position.
 
 These acceleration values are returned to the `accelerometerSuccess`
 callback function.
@@ -100,7 +101,7 @@ Values for X, Y, Z motion are all randomly generated in order to simulate the ac
 
 ### Android Quirks
 
-The accelerometer is called with the `SENSOR_DELAY_UI` flag, which limits the maximum readout frequency to something between 20 and 60 Hz, depending on the device. Values for __period__ corresponding to higher frequencies will result in duplicate samples. More details can be found in the [Android API Guide](http://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-monitor).
+The accelerometer is called with the `SENSOR_DELAY_GAME` flag, which limits the maximum readout frequency to 50Hz, depending on the device. Values for __period__ corresponding to higher frequencies will result in duplicate samples. More details can be found in the [Android API Guide](http://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-monitor).
 
 
 ### iOS Quirks
@@ -146,13 +147,9 @@ accelerometer.
 
     var watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
-### iOS Quirks
+### Android Quirks
 
-The API calls the success callback function at the interval requested,
-but restricts the range of requests to the device between 40ms and
-1000ms. For example, if you request an interval of 3 seconds,
-(3000ms), the API requests data from the device every 1 second, but
-only executes the success callback every 3 seconds.
+The API returns Azimuth for yaw.
 
 ## navigator.accelerometer.clearWatch
 
@@ -182,4 +179,7 @@ device lies flat and facing up, _x_, _y_, and _z_ values returned should be
 - __x__:  Amount of acceleration on the x-axis. (in m/s^2) _(Number)_
 - __y__:  Amount of acceleration on the y-axis. (in m/s^2) _(Number)_
 - __z__:  Amount of acceleration on the z-axis. (in m/s^2) _(Number)_
+- __roll__:  Angle of rotation about the y axis. (in radians) _(Number)_
+- __pitch__:  Angle of rotation about the x axis. (in radians) _(Number)_
+- __yaw__:  Angle of rotation about the -z axis (Android returns Azimuth). (in radians) _(Number)_
 - __timestamp__: Creation timestamp in milliseconds. _(DOMTimeStamp)_
